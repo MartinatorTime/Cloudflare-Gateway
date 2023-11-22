@@ -31,7 +31,11 @@ jobs:
       - name: Merge upstream changes
         run: |
           git merge --allow-unrelated-histories --no-commit upstream/main
-          git diff --name-only --diff-filter=U | xargs git checkout --ours
+
+      - name: Resolve merge conflicts
+        run: |
+          git checkout --ours -- $(git diff --name-only --diff-filter=U)
+          git add -A
 
       - name: Commit changes
         run: git commit -m "Resolve merge conflicts"
