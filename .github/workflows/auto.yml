@@ -3,9 +3,9 @@ name: Update Filter Lists
 on:
   schedule:
     - cron: "0 3 * * 1"
-  push:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
   workflow_dispatch:
 
 concurrency:
