@@ -1,25 +1,30 @@
-name: Delete All PRs
+name: Force Delete All PRs
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
+  # You might want to add additional triggers based on your needs, e.g., push to specific branches.
 
 jobs:
   delete-prs:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
+    - name: Checkout Repository
       uses: actions/checkout@v2
+
+    - name: Install jq
+      run: |
+        sudo apt-get update
+        sudo apt-get install jq -y
 
     - name: Delete PRs
       run: |
-        # Get the list of open pull requests
-        prs=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        # Fetch all open pull requests
+        PR_LIST=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/pulls?state=open" | \
           jq -r '.[].number')
 
-        # Loop through and delete each pull request
-        for pr in $prs; do
+        # Loop through each PR and force delete it
+        for pr_number in $PR_LIST; do
           curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/$pr"
+            "https://api.github.com/repos/${{ github.repository }}/pulls/$pr_number"
         done
