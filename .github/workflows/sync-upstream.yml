@@ -22,16 +22,6 @@ jobs:
         run: |
           git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
           git fetch upstream
-
-      - name: Check if feature-branch exists and delete it
-        run: |
-          if git show-ref --quiet refs/heads/feature-branch; then
-            git branch -D feature-branch
-          fi
-
-      - name: Create a new branch for changes
-        run: |
-          git checkout -b feature-branch
           git merge --allow-unrelated-histories upstream/main
 
       - name: Check for new files
@@ -49,7 +39,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: feature-branch
+          branch: main
           title: Sync with upstream
           base: main
         env:
