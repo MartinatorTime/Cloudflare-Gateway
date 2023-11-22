@@ -25,7 +25,6 @@ jobs:
           git fetch upstream
 
       - name: Set modified files
-        id: set-modified-files
         run: echo "MODIFIED_FILES=$(git diff --name-only upstream/main)" >> $GITHUB_ENV
 
       - name: Merge upstream changes
