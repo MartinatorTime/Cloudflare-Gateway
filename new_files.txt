@@ -1,5 +1,4 @@
 .github/dependabot.yml
-.github/workflows/Clear-PR.yml
 .github/workflows/Clear-runs.yml
 .github/workflows/auto.yml
 .github/workflows/clear.yml
