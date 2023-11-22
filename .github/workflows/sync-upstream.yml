@@ -38,22 +38,12 @@ jobs:
             exit 0
           fi
 
-      - name: Create pull requests
-        run: |
-          while IFS= read -r file; do
-            # Replace invalid characters in file path for branch name
-            branch_name="feature-branch-$(echo "$file" | tr '/' '_')"
-            
-            echo "Creating pull request for $file on branch $branch_name..."
-            pr_title="Sync with upstream - $file"
-            
-            git checkout -b "$branch_name"
-            git add "$file"
-            git commit -m "Sync with upstream - $file"
-            git push origin "$branch_name"
-            
-            hub pull-request -m "$pr_title" -b main -h "$branch_name"
-          done < new_files.txt
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: feature-branch
+          title: Sync with upstream
+          base: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
