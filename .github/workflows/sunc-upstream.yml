@@ -23,8 +23,18 @@ jobs:
           git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
           git fetch upstream
 
+      - name: Create a new branch for changes
+        run: git checkout -b feature-branch
+
       - name: Merge upstream changes
         run: git merge --allow-unrelated-histories upstream/main
 
       - name: Push changes to fork
-        run: git push origin Upstream
+        run: git push origin feature-branch
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: feature-branch
+          base: main
+          title: 'Sync with upstream'
