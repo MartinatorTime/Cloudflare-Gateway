@@ -28,8 +28,10 @@ jobs:
           git branch -D temp-branch
 
       - name: Check for new files
+        id: new_files
         run: |
-          if git diff --name-only --diff-filter=A upstream/main; then
+          git diff --name-only --diff-filter=A upstream/main > new_files.txt
+          if [ -s new_files.txt ]; then
             echo "New files found. Creating pull request..."
           else
             echo "No new files found."
