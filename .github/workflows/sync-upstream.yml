@@ -17,9 +17,6 @@ jobs:
         run: |
           git config --global user.name 'Your Name'
           git config --global user.email 'your.email@example.com'
-          git config --global --unset-all remote.origin.fetch
-          git config --global --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-          git fetch --all
 
       - name: Fetch upstream changes
         run: |
