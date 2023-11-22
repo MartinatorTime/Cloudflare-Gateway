@@ -19,8 +19,9 @@ jobs:
           git config --global user.email 'your.email@example.com'
 
       - name: Fetch upstream changes
-        run: git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
-        run: git fetch upstream
+        run: |
+            git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
+            git fetch upstream
 
       - name: Merge upstream changes
         run: git merge upstream/main
