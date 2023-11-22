@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set Git config
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
       - name: Fetch upstream changes
         run: |
           git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
