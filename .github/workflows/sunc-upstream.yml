@@ -20,11 +20,11 @@ jobs:
 
       - name: Fetch upstream changes
         run: |
-            git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
-            git fetch upstream
+          git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
+          git fetch upstream
 
       - name: Merge upstream changes
-        run: git merge upstream/main
+        run: git merge --allow-unrelated-histories upstream/main
 
       - name: Push changes to fork
         run: git push origin main
