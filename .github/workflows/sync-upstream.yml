@@ -36,7 +36,9 @@ jobs:
         run: git merge --allow-unrelated-histories upstream/main
 
       - name: Push changes to fork
-        run: git push origin feature-branch
+        run: |
+          git pull origin feature-branch
+          git push origin feature-branch
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v5
