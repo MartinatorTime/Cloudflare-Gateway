@@ -36,6 +36,7 @@ jobs:
           fi
 
       - name: Create pull request
+        if: steps.new_files.outputs.new_files != ''
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
