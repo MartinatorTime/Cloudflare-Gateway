@@ -39,7 +39,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          branch: feature-branch
           title: Sync with upstream
           base: main
         env:
