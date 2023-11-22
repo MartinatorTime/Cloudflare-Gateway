@@ -28,7 +28,6 @@ jobs:
         id: set-modified-files
         run: echo "MODIFIED_FILES=$(git diff --name-only upstream/main)" >> $GITHUB_ENV
 
-
       - name: Merge upstream changes
         run: |
           git merge --allow-unrelated-histories --no-commit upstream/main
