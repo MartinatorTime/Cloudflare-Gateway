@@ -41,14 +41,19 @@ jobs:
       - name: Create pull requests
         run: |
           while IFS= read -r file; do
-            echo "Creating pull request for $file..."
+            # Replace invalid characters in file path for branch name
+            branch_name="feature-branch-$(echo "$file" | tr '/' '_')"
+            
+            echo "Creating pull request for $file on branch $branch_name..."
             pr_title="Sync with upstream - $file"
-            branch_name="feature-branch-$file"
+            
             git checkout -b "$branch_name"
             git add "$file"
             git commit -m "Sync with upstream - $file"
             git push origin "$branch_name"
+            
             hub pull-request -m "$pr_title" -b main -h "$branch_name"
           done < new_files.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
