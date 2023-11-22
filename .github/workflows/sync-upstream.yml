@@ -37,7 +37,7 @@ jobs:
 
       - name: Push changes to fork
         run: |
-          git pull origin feature-branch
+          git pull --rebase=false origin feature-branch
           git push origin feature-branch
 
       - name: Create pull request
