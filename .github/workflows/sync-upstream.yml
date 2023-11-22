@@ -24,11 +24,6 @@ jobs:
           git fetch upstream
           git merge --allow-unrelated-histories upstream/main
 
-      - name: Check for differences
-        id: diff_check
-        run: |
-          git diff --exit-code || echo "Repository is different from upstream" >> differences.txt
-
       - name: Check for new files
         id: new_files
         run: |
@@ -47,7 +42,5 @@ jobs:
           branch: feature-branch
           title: Sync with upstream
           base: main
-        if: steps.new_files.outputs.new_files == 'true' || steps.diff_check.outputs.diff_check != ''
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
