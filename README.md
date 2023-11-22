@@ -12,15 +12,6 @@ Cloudflare Gateway allows you to create custom rules to filter HTTP, DNS, and ne
 - `cf_gateway_rule_delete.js` - Deletes the Cloudflare Gateway rule created by CGPS. Useful for subsequent runs.
 - `download_lists.js` - Initiates blocklist and whitelist download.
 
-## Features
-
-- Support for basic hosts files
-- Full support for domain lists
-- Automatically cleans up filter lists: removes duplicates, invalid domains, comments and more
-- Works fully unattended
-- Whitelist support, allowing you to prevent false positives and breakage by forcing trusted domains to always be unblocked.
-- Optional health check: Sends a ping request ensuring continuous monitoring and alerting for the workflow execution.
-
 ## Usage
 
 ### Prerequisites
