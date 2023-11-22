@@ -3,3 +3,4 @@
 .github/workflows/auto.yml
 .github/workflows/clear.yml
 .github/workflows/sync-upstream.yml
+new_files.txt
