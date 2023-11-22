@@ -23,6 +23,12 @@ jobs:
           git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
           git fetch upstream
 
+      - name: Check if feature-branch exists and delete it
+        run: |
+          if git show-ref --quiet refs/heads/feature-branch; then
+            git branch -D feature-branch
+          fi
+
       - name: Create a new branch for changes
         run: git checkout -b feature-branch
 
@@ -33,8 +39,16 @@ jobs:
         run: git push origin feature-branch
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v5
+        uses: actions/github-script@v7
         with:
-          branch: feature-branch
-          base: main
-          title: 'Sync with upstream'
+          script: |
+            const { data } = await github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Sync with upstream',
+              head: 'feature-branch',
+              base: 'main',
+            });
+            console.log(`Pull Request created: ${data.html_url}`);
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
