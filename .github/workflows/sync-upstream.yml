@@ -30,15 +30,20 @@ jobs:
           fi
 
       - name: Create a new branch for changes
-        run: git checkout -b feature-branch
-
-      - name: Merge upstream changes
-        run: git merge --allow-unrelated-histories upstream/main
-
-      - name: Push changes to fork
         run: |
-          git pull --rebase=false origin feature-branch
-          git push origin feature-branch
+          git checkout -b feature-branch
+          git merge --allow-unrelated-histories upstream/main
+
+      - name: Check for new files
+        id: new_files
+        run: |
+          git diff --name-only --diff-filter=A upstream/main > new_files.txt
+          if [ -s new_files.txt ]; then
+            echo "New files found. Creating pull request..."
+          else
+            echo "No new files found."
+            exit 0
+          fi
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v5
