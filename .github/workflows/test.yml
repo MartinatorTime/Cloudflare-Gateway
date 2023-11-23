@@ -43,7 +43,7 @@ jobs:
         run: |
           git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
           git fetch upstream
-          git rebase upstream/main
+          git rebase upstream/main || git rebase --abort
 
       - name: Push Merged Branch to Main
         run: |
