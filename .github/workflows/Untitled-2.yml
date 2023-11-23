@@ -1,0 +1,44 @@
+name: Github Action to Sync Branches
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  createBranch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create Branch 'Original'
+        run: |
+          git branch -a | grep -q original || git branch original
+
+      - name: Fetch Upstream
+        run: |
+          git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
+          git fetch upstream
+          git checkout original
+          git reset --hard upstream/main
+
+      - name: Check for differences
+        id: differences
+        run: |
+          git diff --quiet main original
+          echo ::set-output name=changed::${?}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: original
+          title: 'Updates from upstream'
+          body: 'Please review the changes.'
+          draft: false
+          labels: "sync,automerge"
+        if: steps.differences.outputs.changed != "0"
+```
