@@ -1,0 +1,47 @@
+name: Sync with Upstream
+
+on:
+  workflow_dispatch:
+    inputs:
+      update:
+        description: 'Update upstream branch'
+        required: false
+        default: 'false'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your.email@example.com'
+
+      - name: Fetch upstream changes
+        run: |
+          git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
+          git fetch upstream
+          git checkout -b upstream upstream/main
+          if [ "${{ github.event.inputs.update }}" == "true" ]; then
+            git merge --allow-unrelated-histories -X theirs upstream/main
+          fi
+          git push origin upstream
+
+      - name: Create pull request
+        if: github.event.inputs.update == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "upstream-${{ github.sha }}"
+          title: "Sync with upstream"
+          base: main
+          body: "This pull request syncs the changes from the upstream repository."
+
+      - name: Clean up
+        run: |
+          git checkout main
+          git branch -D upstream
