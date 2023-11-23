@@ -1,6 +1,7 @@
 name: Github Action to Sync Branches
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
