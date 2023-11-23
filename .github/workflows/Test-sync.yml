@@ -30,8 +30,9 @@ jobs:
       - name: Check for new files
         id: new_files
         run: |
-          git diff --name-only --diff-filter=A upstream/main > new_files.txt
-          if [[ -s new_files.txt ]]; then
+          git fetch upstream
+          if [[ $(git diff --name-only --diff-filter=AM upstream/main | wc -l) -gt 0 ]]; then
+            echo "There are differences or new files."
             echo "NEW_FILES=true" >> $GITHUB_ENV
           else
             echo "No new files found."
@@ -40,12 +41,13 @@ jobs:
           fi
 
       - name: Create pull request
+        if: env.NEW_FILES == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: "feature-branch-${{ github.run_id }}"
           title: "Sync with upstream"
-          body: "New files have been found in the upstream which are not available on the current repository."
+          body: "New files or differences have been found in the upstream which are not available on the current repository."
           base: main
           labels: "autosync, upstream"
         env:
