@@ -35,9 +35,6 @@ jobs:
           git diff --name-only --diff-filter=A upstream/main > new_files.txt
           if [ -s new_files.txt ]; then
             echo "NEW_FILES=true" >> $GITHUB_ENV
-            git checkout -b feature-branch-${{ github.run_id }}
-            git merge --no-ff -m "Sync with upstream" upstream/main
-            git push origin feature-branch-${{ github.run_id }}
           else
             echo "No new files found."
             echo "NEW_FILES=false" >> $GITHUB_ENV
