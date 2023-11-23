@@ -33,11 +33,10 @@ jobs:
         id: new_files
         run: |
           git diff --name-only --diff-filter=A upstream/main > new_files.txt
-          if [ -s new_files.txt ]; then
-            echo "::set-output name=new_files::true"
+          if [[ -s new_files.txt ]]; then
+            echo "true" >> $GITHUB_ENV
           else
-            echo "No new files found."
-            echo "::set-output name=new_files::false"
+            echo "false" >> $GITHUB_ENV
             exit 0
           fi
 
