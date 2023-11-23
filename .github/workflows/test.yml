@@ -31,16 +31,9 @@ jobs:
           git checkout -b original
           git push -u origin original
 
-  add-upstream:
-    runs-on: ubuntu-latest
-    needs: [create-branch]
-    steps:
-      - name: Update Upstream Remote URL
-        run: git remote set-url upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
-
   merge-upstream:
     runs-on: ubuntu-latest
-    needs: [add-upstream]
+    needs: [create-branch]
     steps:
       - name: Checkout Main Branch
         uses: actions/checkout@v4
@@ -54,6 +47,7 @@ jobs:
 
       - name: Fetch Upstream Changes
         run: |
+          git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
           git fetch upstream
           git rebase upstream/main || git rebase --abort
 
