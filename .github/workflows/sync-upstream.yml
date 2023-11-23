@@ -1,7 +1,7 @@
-name: Sync with Upstream
+name: Sync with Upstream Test
 
 on:
-  #push:
+  push:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *' # Run the workflow daily
@@ -9,10 +9,11 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Git
         run: |
@@ -33,9 +34,10 @@ jobs:
         run: |
           git diff --name-only --diff-filter=A upstream/main > new_files.txt
           if [ -s new_files.txt ]; then
-            echo "New files found. Creating pull requests..."
+            echo "::set-output name=new_files::true"
           else
             echo "No new files found."
+            echo "::set-output name=new_files::false"
             exit 0
           fi
 
@@ -43,8 +45,10 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: feature-branch
-          title: Sync with upstream
+          branch: "feature-branch-${{ github.run_id }}"
+          title: "Sync with upstream"
+          body: "New files have been found in the upstream which are not available on the current repository."
           base: main
+          labels: "autosync, upstream"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

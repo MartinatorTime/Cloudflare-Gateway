@@ -34,9 +34,10 @@ jobs:
         run: |
           git diff --name-only --diff-filter=A upstream/main > new_files.txt
           if [[ -s new_files.txt ]]; then
-            echo "true" >> $GITHUB_ENV
+            echo "NEW_FILES=true" >> $GITHUB_ENV
           else
-            echo "false" >> $GITHUB_ENV
+            echo "No new files found."
+            echo "NEW_FILES=false" >> $GITHUB_ENV
             exit 0
           fi
 
