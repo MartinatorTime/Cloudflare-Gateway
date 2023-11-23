@@ -1,6 +1,7 @@
 name: Create and Merge Branch
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       force_merge:
@@ -34,8 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [create-branch]
     steps:
-      - name: Add Upstream Remote
-        run: git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
+      - name: Update Upstream Remote URL
+        run: git remote set-url upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
 
   merge-upstream:
     runs-on: ubuntu-latest
