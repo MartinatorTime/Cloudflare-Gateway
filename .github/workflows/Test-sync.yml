@@ -1,0 +1,54 @@
+name: Sync with Upstream Test
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # Run the workflow daily
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your.email@example.com'
+
+      - name: Fetch upstream changes
+        run: |
+          git remote add upstream https://github.com/mrrfv/cloudflare-gateway-pihole-scripts.git
+          git fetch upstream
+          git checkout -b temp-branch upstream/main
+          git checkout main
+          git merge --allow-unrelated-histories --no-edit -X theirs temp-branch
+          git branch -D temp-branch
+
+      - name: Check for new files
+        id: new_files
+        run: |
+          git diff --name-only --diff-filter=A upstream/main > new_files.txt
+          if [ -s new_files.txt ]; then
+            echo "::set-output name=new_files::true"
+          else
+            echo "No new files found."
+            echo "::set-output name=new_files::false"
+            exit 0
+          fi
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "feature-branch-${{ github.run_id }}"
+          title: "Sync with upstream"
+          body: "New files have been found in the upstream which are not available on the current repository."
+          base: main
+          labels: "autosync, upstream"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
