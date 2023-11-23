@@ -1,6 +1,7 @@
 name: Sync with Upstream
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *' # Run the workflow daily
@@ -33,14 +34,18 @@ jobs:
         run: |
           git diff --name-only --diff-filter=A upstream/main > new_files.txt
           if [ -s new_files.txt ]; then
-            echo "::set-output name=new_files::true"
+            echo "NEW_FILES=true" >> $GITHUB_ENV
+            git checkout -b feature-branch-${{ github.run_id }}
+            git merge --no-ff -m "Sync with upstream" upstream/main
+            git push origin feature-branch-${{ github.run_id }}
           else
             echo "No new files found."
-            echo "::set-output name=new_files::false"
+            echo "NEW_FILES=false" >> $GITHUB_ENV
             exit 0
           fi
 
       - name: Create pull request
+        if: env.NEW_FILES == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
