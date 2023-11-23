@@ -41,4 +41,3 @@ jobs:
           draft: false
           labels: "sync,automerge"
         if: steps.differences.outputs.changed != "0"
-```
