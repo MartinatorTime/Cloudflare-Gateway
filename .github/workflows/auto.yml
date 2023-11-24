@@ -19,6 +19,14 @@ jobs:
   cgps:
     runs-on: ubuntu-latest
     steps:
+      - name: Check Cloudflare API
+        run: |
+          response=$(curl --write-out '%{http_code}' --silent --output /dev/null https://api.cloudflare.com/client/v4/user)
+          if [ $response -ne 200 ]; then
+            echo "Cloudflare API is not working. Exiting..."
+            exit 1
+          fi
+          
       - name: Checkout
         uses: actions/checkout@v4
         with:
