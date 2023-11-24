@@ -19,11 +19,11 @@ jobs:
   cgps:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Cloudflare API
+      - name: Verify Cloudflare API Token
         run: |
-          response=$(curl --write-out '%{http_code}' --silent --output /dev/null https://api.cloudflare.com/client/v4/user)
-          if [ $response -ne 200 ]; then
-            echo "Cloudflare API is not working. Exiting..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" "https://api.cloudflare.com/client/v4/user/tokens/verify")
+          if [ "$response" -ne 200 ]; then
+            echo "Cloudflare API token verification failed with HTTP status $response"
             exit 1
           fi
           
