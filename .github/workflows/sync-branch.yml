@@ -1,9 +1,7 @@
 name: Sync branch
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   sync-branch:
