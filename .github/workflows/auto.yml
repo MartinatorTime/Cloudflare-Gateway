@@ -3,6 +3,7 @@ name: Update Filter Lists
 on:
   schedule:
     - cron: "0 3 * * *"
+      timezone: "Europe/Riga"
   workflow_dispatch:
 
 concurrency:
